@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta id="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/calendargen.js" defer></script>
+  <title>Moodie - Local Mood Tracker</title>
+</head>
+<body>
+  <header>
+    <h1>Moodie!</h1>
+  </header>
+  
+  <main>
+    <div class="fade-in" id="calendar">
+      <header id="monthHeader">
+        <h2>Month, Year</h2>
+      </header>
+      <section id="daysOfWeek">
+        <div>Mon</div>
+        <div>Tues</div>
+        <div>Wed</div>
+        <div>Thur</div>
+        <div>Fri</div>
+        <div>Sat</div>
+        <div>Sun</div>
+      </section>
+      <section id="calendarDays">
+      
+      
+      </section>
+    </div>
+    
+  </main>
+  <section id="functions">
+    <button>Export as CSV</button>
+    <button data-bs-toggle="modal" data-bs-target="#warningModal">Erase All Data</button>
+  </section>
+  <footer>
+    By Jams
+  </footer>
+  
+  <!-- Modal -->
+  <div class="modal fade" id="modal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="modalLabel">Add a New Entry</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form class="px-3" name="moodForm">
+            <div class="row mb-3">
+              <label class="col-4 form-label my-auto" for="date">Date:</label>
+              <div class="col-8">
+                <input class="form-control" type="date" id="date" disabled>
+              </div>
+            </div>            
+            <div class="mb-3">
+              <label class="form-label" for="mood">Mood:</label><br>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="mood1" value="depressed">
+                <label class="form-check-label" for="mood1">Depressed</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="mood2" value="anxious">
+                <label class="form-check-label" for="mood2">Anxious</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="mood3" value="sad">
+                <label class="form-check-label" for="mood3">Sad</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="mood4" value="okay">
+                <label class="form-check-label" for="mood4">Okay</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="mood5" value="happy">
+                <label class="form-check-label" for="mood5">Happy</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="mood6" value="amazing">
+                <label class="form-check-label" for="mood6">Amazing!</label>
+              </div>
+            </div>
+            
+            <div class="row mb-3">
+              <label class="col-8 form-label my-auto" for="rating">Out of 10, I would rate today a:</label>
+              <div class="col-4">
+                <input class="form-control" type="number" id="rating" min="1" max="10">
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label" for="threeThings">3 Good Things About Today:</label>
+              <textarea class="form-control" id="threeThings"></textarea>
+            </div>
+            
+
+            <label class="form-label" for="sticker">Today in Summary:</label><br>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" id="sticker0" value="period" name="sticker">
+              <label class="form-check-label" for="sticker0">Period</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" id="sticker1" value="sweat" name="sticker">
+              <label class="form-check-label" for="sticker1">Sweat</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" id="sticker2" value="bed" name="sticker">
+              <label class="form-check-label" for="sticker2">Bed</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" id="sticker3" value="sad" name="sticker">
+              <label class="form-check-label" for="sticker3">Sad</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" id="sticker4" value="sun" name="sticker">
+              <label class="form-check-label" for="sticker4">Sun</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" id="sticker5" value="heart" name="sticker">
+              <label class="form-check-label" for="sticker5">Heart</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" id="sticker6" value="sparkle" name="sticker">
+              <label class="form-check-label" for="sticker6">Sparkle</label>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" data-bs-dismiss="modal">Close</button>
+          <button type="button" data-bs-dismiss="modal" id="save">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Erase Modal -->
+  <div class="modal fade" id="warningModal" tabindex="-1" aria-labelledby="warningModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="warningModalLabel">Warning!</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          This will erase all your current data. Are you sure you wish to proceed?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Don't Erase</button>
+          <button type="button" class="btn btn-danger" id="eraseAll" data-bs-dismiss="modal">Erase It All!</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- New Month Modal -->
+  <div class="modal fade" id="newMonthModal" tabindex="-1" aria-labelledby="newMonthModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title mx-auto" id="newMonthModalLabel">Hello, welcome to a new month!</h5>
+        </div>
+        <div class="modal-body">
+          Once you click through, data from the previous month will be erased.
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="saveOld">Save Data</button>
+          <button type="button" id="noSave" data-bs-dismiss="modal">Proceed without Saving</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

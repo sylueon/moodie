@@ -1,0 +1,164 @@
+@import url("https://fonts.googleapis.com/css2?family=Raleway&family=Satisfy&family=Comfortaa&display=swap");
+
+:root {
+  --warm: #ffc478;
+  --teal: #75cfb8;
+  --lightteal: #bbdfc8;
+  --paper: #fff; /*#f0e5d8*/
+  --white: #fff;
+}
+
+body {
+  min-height: 98vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: Raleway, Arial, Helvetica, sans-serif;
+  background-image: url(https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80);
+}
+
+h1 {
+  font-family: Satisfy, Arial, Helvetica, sans-serif;
+  font-size: 7rem;
+  margin: 0;
+  background: linear-gradient(to right, var(--warm), var(--lightteal));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: right;
+  transform: rotate(-10deg);
+  padding: 0 1rem;
+  font-weight: bold;
+}
+
+h2 {
+  text-align: center;
+  margin: 0;
+  padding: 1.5rem 0;
+}
+
+section#daysOfWeek,
+h2,
+.modal-header,
+.modal-footer {
+  background-color: var(--teal);
+  color: var(--white);
+  letter-spacing: 0.1rem;
+}
+
+#daysOfWeek div {
+  text-align: center;
+  padding-bottom: 1.5rem;
+}
+
+.week,
+section#daysOfWeek {
+  display: flex;
+}
+
+.week article,
+#daysOfWeek div,
+.week {
+  flex-grow: 1;
+  flex-basis: 0;
+}
+
+.week article {
+  height: 70px;
+  padding: 0.5rem;
+  border: 1px solid rgba(238, 203, 141, 0.15);
+  transition: background-color 0.5s;
+}
+
+.week article:hover {
+  background-color: rgba(238, 203, 141, 0.5);
+  border-color: transparent;
+}
+
+main,
+.modal-content {
+  background-color: var(--white);
+  border-radius: 30px;
+  overflow: hidden;
+  width: 800px;
+}
+
+button {
+  background-color: var(--white);
+  border-radius: 1rem;
+  border: 0;
+  padding: 0.5rem 1rem;
+  margin: 1rem;
+}
+
+.modal-footer,
+.modal-header {
+  border: 0;
+}
+
+.form-label {
+  font-family: Comfortaa, Arial, Helvetica, sans-serif;
+  font-weight: bold;
+}
+
+#dayTabDesc p.text-center {
+  font-size: 1.5rem;
+}
+
+h3 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-top: 2.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.descImg {
+  background-size: contain;
+  height: 100px;
+  width: 100px;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  mix-blend-mode: multiply;
+  opacity: 0.5;
+  z-index: 0;
+}
+
+#editDayDiv,
+h3,
+#dayTabDesc p.text-center {
+  z-index: 1;
+  position: relative;
+}
+
+.fade-in {
+  opacity: 1;
+  animation-name: fadeInOpacity;
+  animation-iteration-count: 1;
+  animation-timing-function: linear;
+  animation-duration: 0.15s;
+}
+
+@keyframes fadeInOpacity {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+#calendarDays {
+  display: flex;
+  flex-direction: column;
+  height: 350px;
+}
+
+#dayDescArticle {
+  height: 395px;
+}
+
+.calSticker {
+  height: 20px;
+  width: 20px;
+}
