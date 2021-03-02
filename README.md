@@ -14,5 +14,5 @@ A mood tracker that lets you visualise how your month is going with colors and s
 * Export data as CSV
 * Customisable mood colors & stickers
 * Mobile compatibility/responsiveness
-* Light/Dark themes
+* Light/Dark themes (+ more general CSS theming)
 * Grey out days outside the current month
