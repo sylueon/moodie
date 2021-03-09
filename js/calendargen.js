@@ -42,6 +42,18 @@ const getStorage = () => {
   return monthStorage;
 }
 
+const toggleCalendarVisibility = (status) => {
+  if (status === "hide") {
+    document.querySelector("#monthHeader").classList.add("hidden");
+    document.querySelector("#daysOfWeek").classList.add("hidden");
+    document.querySelector("#calendarDays").classList.add("hidden");
+  } else {
+    document.querySelector("#monthHeader").classList.remove("hidden");
+    document.querySelector("#daysOfWeek").classList.remove("hidden");
+    document.querySelector("#calendarDays").classList.remove("hidden");
+  }
+}
+
 //class to store daily info
 class trackerDay {
   constructor(date, mood, goodThings, sticker, rating) {
@@ -94,10 +106,11 @@ function dayMaker(el, id, innerText, appendTo) {
 
     //click leads into page with details about that day
     element.addEventListener("click", () => {
-      // const main = document.querySelector("main");
+      //remove the fade-in class from the calendar so it can be retriggered when added back
       document.querySelector("#calendar").classList.remove("fade-in");
+      
+      //make the tab to contain the details
       let div;
-
       if (!document.querySelector("#dayTab")) {
         div = document.createElement("div");
           div.id = "dayTab";
@@ -108,12 +121,13 @@ function dayMaker(el, id, innerText, appendTo) {
         div.classList.add("fade-in");
       }
 
-      document.querySelector("#monthHeader").style.display = "none";
-      document.querySelector("#daysOfWeek").style.display = "none";
-      document.querySelector("#calendarDays").style.display = "none";
-
+      //hide the calendar boys for now
+      toggleCalendarVisibility("hide");
+      
+      //get date from object and convert to full date
       const day = new Date(`${storage.days[id].date}`).toLocaleDateString([],{dateStyle: "full"});
 
+      //put that date in the header
       const header = document.createElement("header");
         header.innerHTML = `<h2 class="d-flex px-3 justify-content-between">
           <a href="#" class="text-white btn" id="back"><<</a>
@@ -121,18 +135,21 @@ function dayMaker(el, id, innerText, appendTo) {
         </h2> `;
       div.append(header);
 
+      //brings back the calendar (+fade-in class to initiate fade in animation)
       header.querySelector("#back").addEventListener("click", () => {
+        //erase the details div + remove fade-in class
         div.innerHTML = "";
-        document.querySelector("#monthHeader").style.display = "initial";
-        document.querySelector("#daysOfWeek").style.display = "flex";
-        document.querySelector("#calendarDays").style.display = "initial";
         div.classList.remove("fade-in");
+
+        //show the calendar + add fade-in class to toggle the animation
+        toggleCalendarVisibility("show");        
         document.querySelector("#calendar").classList.add("fade-in");
       });
 
+      //parse the mood for the details page
       const parsedMood = storage.days[id].mood.reverse().toString().replace(/,(?=[^,]*$)/, " & ").replace(/,/g, ", ");
 
-
+      //creates the details in article element for the details page
       const article = document.createElement("article");
         article.id = "dayDescArticle";
         article.classList = "d-flex"
@@ -154,15 +171,24 @@ function dayMaker(el, id, innerText, appendTo) {
         `;
       div.append(article);
 
+      //adds event listener to fill in the details
       article.querySelector("#editDay").addEventListener("click", () => {
+        //reset the modal form
         document.querySelector("form[name=moodForm]").reset();
-        const dateEl = document.querySelector("input[id=date]");
-          const inputDate = new Date(now.getFullYear(), now.getMonth(), id+1);
-          dateEl.value = inputDate.toISOString().substr(0,10);
 
+        //assign the date for the date input element
+        const dateEl = document.querySelector("input[id=date]");
+        const inputDate = new Date(now.getFullYear(), now.getMonth(), id+1);
+        dateEl.value = inputDate.toISOString().substr(0,10);
+
+        //assigns the rating, 3 good things and sticker to fill form
         document.querySelector("input[id=rating]").value = storage.days[id].rating;
         document.querySelector("textarea[id=threeThings]").value = storage.days[id].goodThings;
-        document.querySelector(`input[value=${storage.days[id].sticker}]`).checked = true;
+        if (storage.days[id].sticker) {           
+          document.querySelector(`input[value=${storage.days[id].sticker}]`).checked = true;
+        }
+
+        
         storage.days[id].mood.forEach((m) => {          
           console.log(m)
           if(document.querySelector(`input[value=${m}]`)) {
@@ -171,9 +197,7 @@ function dayMaker(el, id, innerText, appendTo) {
         })
 
         div.innerHTML = "";
-        document.querySelector("#monthHeader").style.display = "initial";
-        document.querySelector("#daysOfWeek").style.display = "flex";
-        document.querySelector("#calendarDays").style.display = "initial";
+        toggleCalendarVisibility("show");
       }) 
 
     })
@@ -305,4 +329,91 @@ document.querySelector("#save").addEventListener("click", () => {
     setCalendar()
   });
 
+  //from https://medium.com/@danny.pule/export-json-to-csv-file-using-javascript-a0b7bc5b00d2 + https://codepen.io/danny_pule/pen/WRgqNx
+ function convertToCSV(objArray) {
+    var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
+    var str = '';
+
+    for (var i = 0; i < array.length; i++) {
+        var line = '';
+        for (var index in array[i]) {
+            if (line != '') line += ','
+
+            line += array[i][index];
+        }
+
+        str += line + '\r\n';
+    }
+
+    return str;
+}
+
+function exportCSVFile(headers, items, fileTitle) {
+    if (headers) {
+        items.unshift(headers);
+    }
+
+    // Convert Object to JSON
+    var jsonObject = JSON.stringify(items);
+
+    var csv = this.convertToCSV(jsonObject);
+
+    var exportedFilename = fileTitle + '.csv' || 'export.csv';
+
+    var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    if (navigator.msSaveBlob) { // IE 10+
+        navigator.msSaveBlob(blob, exportedFilename);
+    } else {
+        var link = document.createElement("a");
+        if (link.download !== undefined) { // feature detection
+            // Browsers that support HTML5 download attribute
+            var url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", exportedFilename);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    }
+}
+
+function download(){
+  var headers = {
+      date: 'Date',
+      mood: "Mood",
+      goodThings: "Good Things",
+      sticker: "Sticker",
+      rating: "Rating"
+  };
+
+  getMood = JSON.parse(localStorage.getItem('moodStorage'));
+  getDays = getMood.days;
+
+  itemsNotFormatted = getMood.days;
+
+  var itemsFormatted = [];
+
+  itemsNotFormatted.forEach((item) => {
+    if (item != null) {
+      item.mood = item.mood.reverse().toString().replace(/,(?=[^,]*$)/, " & ").replace(/,/g, ", ");
+    }
+  });
   
+  // format the data
+  itemsNotFormatted.forEach((item) => {
+    if (item != null) {
+      itemsFormatted.push({
+          date: `"${item.date}"`, // remove commas to avoid errors,
+          mood: `"${item.mood}"`,
+          goodThings: `"${item.goodThings.replace(/"/gim,"'")}"`,
+          sticker: `"${item.sticker}"`,
+          rating: `"${item.rating}"`
+      });
+    }      
+  });
+
+  var fileTitle = `${getMood.year}_${getMood.month}`; // or 'my-unique-title'
+
+  exportCSVFile(headers, itemsFormatted, fileTitle); // call the exportCSVFile() function to process the JSON and trigger the download
+}

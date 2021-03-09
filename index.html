@@ -39,7 +39,7 @@
     
   </main>
   <section id="functions">
-    <button>Export as CSV</button>
+    <button onclick="download()">Export as CSV</button>
     <button data-bs-toggle="modal" data-bs-target="#warningModal">Erase All Data</button>
   </section>
   <footer>
@@ -172,7 +172,7 @@
           Once you click through, data from the previous month will be erased.
         </div>
         <div class="modal-footer">
-          <button type="button" id="saveOld">Save Data</button>
+          <button type="button" id="saveOld" onclick="download()" data-bs-dismiss="modal">Save Data</button>
           <button type="button" id="noSave" data-bs-dismiss="modal">Proceed without Saving</button>
         </div>
       </div>
