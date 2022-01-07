@@ -13,13 +13,13 @@ const settings = {
     amazing: "#FF9AA2"
   },
   stickers: {
-    period: "https://discord.com/assets/2af597d88e655d0cce7ff65a50298d70.svg",
-    sweat: "https://discord.com/assets/9d7ddcf78b0fdff6ab938077da38401f.svg",
-    bed: "https://discord.com/assets/08148db134d007c67675a73a5c89bc19.svg",
-    sad: "https://discord.com/assets/f6d30507f4baee759bc9d7e5c0d3ba4f.svg",
-    sun: "https://discord.com/assets/1038cee47a0a8313dc2d4006145fcee6.svg",
-    heart: "https://discord.com/assets/8544ea5ce32fd9e17df806eb1cfeab47.svg",
-    sparkle: "https://discord.com/assets/e820a306c732b90515989dada9995a97.svg"
+    period: "https://cdn.discordapp.com/attachments/813440421879087134/927852951727407134/1fa78.png",
+    sweat: "https://cdn.discordapp.com/attachments/813440421879087134/927852500952965130/1f4a6.png",
+    bed: "https://cdn.discordapp.com/attachments/813440421879087134/927852390332370944/1f6cf.png",
+    sad: "https://cdn.discordapp.com/attachments/813440421879087134/927851978774708264/1f622.png",
+    sun: "https://cdn.discordapp.com/attachments/813440421879087134/927851496790446080/2600.png",
+    heart: "https://cdn.discordapp.com/attachments/813440421879087134/927851396324286484/2764.png",
+    sparkle: "https://cdn.discordapp.com/attachments/813440421879087134/927851239981604896/2728.png"
   }
 }
 
@@ -84,25 +84,32 @@ function dayMaker(el, id, innerText, appendTo) {
   const storage = getStorage();
 
   //if there is data stored for the day clicked, generate the page with further info
-  if(storage.days[id]) {
+  if(storage.days[id] && !(storage.days[id].sticker == "" && storage.days[id].mood == "" && storage.days[id].goodThings == "" && storage.days[id].rating == "")) {
     //gets the sticker img url
     const sticker = storage.days[id].sticker;
-    const stickerImg = settings.stickers[sticker];    
 
-    //HTML for how the day looks on calendar
-    element.innerHTML = `<div>${innerText}</div><div class='ms-auto mt-auto calSticker' style='background:url(${stickerImg});'></div>`;
+    if (sticker != "") {
+      const stickerImg = settings.stickers[sticker];    
 
+      //HTML for how the day looks on calendar
+      element.innerHTML = `<div>${innerText}</div><div class='ms-auto mt-auto calSticker' style='background:url(${stickerImg});'></div>`;
+    }
+    
     //linear gradient for mood
     const mood = storage.days[id].mood;
-    const moodMap = mood.map((a) => settings.moodBg[a]);
-    const moodMapString = moodMap.toString();   
 
-    if (mood.length > 1) {      
-      element.style.background = `linear-gradient(to bottom right, ${moodMapString})`;
-    } else {
-      element.style.background = `linear-gradient(to bottom right, transparent, ${moodMapString})`;
+    if(mood.length > 0) {
+      const moodMap = mood.map((a) => settings.moodBg[a]);
+      const moodMapString = moodMap.toString();   
+
+      if (mood.length > 1) {      
+        element.style.background = `linear-gradient(to bottom right, ${moodMapString})`;
+      } else {
+        element.style.background = `linear-gradient(to bottom right, transparent, ${moodMapString})`;
+      }
+      element.style.borderColor = "rgba(255,255,255,0.5)";
     }
-    element.style.borderColor = "rgba(255,255,255,0.5)";
+    
 
     //click leads into page with details about that day
     element.addEventListener("click", () => {
@@ -146,8 +153,25 @@ function dayMaker(el, id, innerText, appendTo) {
         document.querySelector("#calendar").classList.add("fade-in");
       });
 
-      //parse the mood for the details page
-      const parsedMood = storage.days[id].mood.reverse().toString().replace(/,(?=[^,]*$)/, " & ").replace(/,/g, ", ");
+
+      let moodText = ``;
+      let ratingText = ``;
+      let goodThingsText = ``;
+      if (mood.length > 0) {
+        //parse the mood for the details page
+        const parsedMood = storage.days[id].mood.reverse().toString().replace(/,(?=[^,]*$)/, " & ").replace(/,/g, ", ");
+        moodText = `<p class="text-center">Today, my mood was ${parsedMood}.</p>`;
+      }
+
+      if (storage.days[id].rating) {
+        ratingText = `<p class="text-center">Out of 10, I'd say it was a ${storage.days[id].rating}.</p>`;
+      }
+      
+      if (storage.days[id].goodThings) {
+        goodThingsText = `<h3 class="mt-5">3 Good Things that happened:</h3>
+          <p class="ps-4">${storage.days[id].goodThings}</p>`;
+      }
+      
 
       //creates the details in article element for the details page
       const article = document.createElement("article");
@@ -156,11 +180,10 @@ function dayMaker(el, id, innerText, appendTo) {
         article.innerHTML = `
         <div class="p-4 my-auto w-100" id="dayTabDesc" style="position: relative;">          
           
-          <p class="text-center">Today, my mood was ${parsedMood}.</p>
-          <p class="text-center">Out of 10, I'd say it was a ${storage.days[id].rating}.</p>
+          ${moodText}
+          ${ratingText}
           
-          <h3 class="mt-5">3 Good Things that happened:</h3>
-          <p class="ps-4">${storage.days[id].goodThings}</p>
+          ${goodThingsText}
 
           <div class="descImg" style="background:url(${settings.stickers[sticker]}) no-repeat;"></div>
 
